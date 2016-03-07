@@ -17,16 +17,9 @@ class System_User extends Alt_Dbo {
             "address"           => "",
             "email"             => "",
             "phone"             => "",
-            "pekerjaan"         => "",
-            "jabatan"           => "",
-            "rt"                => "",
-            "rw"                => "",
-            "kodepos"           => "",
-            "kewarganegaraan"   => "",
-            "wilayahid"         => "",
-            "teleponrumah"      => "",
             "usergroupid"       => "",
             "isenabled"         => "",
+            "clientid"          => "",
         );
 
         $this->view_name            = "view_sys_user";
