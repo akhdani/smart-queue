@@ -1,0 +1,4 @@
+language: php
+script: phpunit --configuration phpunit.xml
+notifications:
+  email: false
