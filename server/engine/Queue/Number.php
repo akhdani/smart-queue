@@ -12,6 +12,7 @@ class Queue_Number extends Alt_Dbo {
         $this->table_fields     = array(
             "numberid"          => "",
             "queueid"           => "",
+            "counterid"         => "",
             "number"            => "",
             "date"              => "",
             "ipaddress"         => "",
@@ -20,5 +21,25 @@ class Queue_Number extends Alt_Dbo {
             "entrytime"         => "",
             "entryuser"         => "",
         );
+    }
+
+    /**
+     * Archiving queue number on new day or on cancel
+     * @param $date
+     * @param string $user
+     * @return int
+     */
+    public function archive($date, $user = 'system'){
+        $list = $this->get(array('where' => 'date = ' . $this->quote($date)));
+
+        $res = 0;
+        $dbo = new Queue_Archive();
+        foreach($list as $item){
+            $item['entryuser'] = $user;
+            $dbo->insert($item);
+            $res += $this->delete(array('numberid' => $item['numberid']));
+        }
+
+        return $res;
     }
 }

@@ -12,6 +12,7 @@ class Queue_Archive extends Alt_Dbo {
         $this->table_fields     = array(
             "numberid"          => "",
             "queueid"           => "",
+            "counterid"         => "",
             "number"            => "",
             "date"              => "",
             "ipaddress"         => "",

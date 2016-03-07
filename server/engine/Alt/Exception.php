@@ -5,18 +5,19 @@ class Alt_Exception extends Exception {
     public $code;
     public $message;
 
-    public function __construct($message, $code = null) {
+    public function __construct($message, $code = null, $data = array()) {
+        $data = array_union($data, $_REQUEST, array('userdata' => System_Auth::get_user_data()));
         $this->message = $message;
         $this->code = $code ? $code : Alt::STATUS_ERROR;
 
-        Alt_Log::error($this->jTraceEx($this));
+        Alt_Log::error($this->jTraceEx($this, null, $data));
     }
 
     public function __toString() {
         return "$this->message [Code: $this->code]";
     }
 
-    function jTraceEx($e, $seen = null) {
+    function jTraceEx($e, $seen = null, $data = array()) {
         $result     = array();
         $seen       = !$seen ? array() : array();
         $trace      = $e->getTrace();
@@ -24,6 +25,7 @@ class Alt_Exception extends Exception {
         $file       = $e->getFile();
         $line       = $e->getLine();
 
+        $result[]   = sprintf('%s', json_encode($data));
         $result[]   = sprintf('%s: %s', get_class($e), $e->getMessage() . " (" . $this->getCode() . ")");
         while (true) {
             $current = "$file:$line";

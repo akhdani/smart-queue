@@ -12,6 +12,16 @@ function array_union($array1, $array2){
         }
     }
 
+    $args = func_get_args();
+    if(count($args) > 2) for($i=2; $i<count($args); $i++){
+        $array3 = $args[$i];
+        foreach ($array3 as $key => $value) {
+            if (false === array_key_exists($key, $union)) {
+                $union[$key] = $value;
+            }
+        }
+    }
+
     return $union;
 }
 
@@ -127,7 +137,7 @@ class Alt {
         try{
             // try get file in route folder
             $controller = ALT_PATH . 'route' . DIRECTORY_SEPARATOR . $routing . '.php';
-            if(!is_file($controller)) throw new Alt_Exception("Request not found", self::STATUS_NOTFOUND);
+            if(!is_file($controller)) throw new Alt_Exception("Request not found", self::STATUS_NOTFOUND, array('route' => $_SERVER['REQUEST_URI']));
 
             ob_start();
             $res = (include_once $controller);

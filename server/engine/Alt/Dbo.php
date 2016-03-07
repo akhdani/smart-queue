@@ -347,7 +347,7 @@ class Alt_Dbo {
 
         // add entry time and entry user if exist
 
-        if($fields['entrytime'] !== null)   $data['entrytime'] = $data['entrytime'] != '' ? $data['entrytime'] : time();
+        if($fields['entrytime'] !== null)   $data['entrytime'] = $data['entrytime'] != '' ? $data['entrytime'] : date('Ymdhis', time());
         if($fields['entryuser'] !== null){
             $userdata = System_Auth::get_user_data();
             $data['entryuser'] = $data['entryuser'] != '' ? $data['entryuser'] : $userdata['username'];
@@ -435,7 +435,7 @@ class Alt_Dbo {
         $table_fields = $this->get_fields(false);
 
         // add modified time and modified user if exist
-        if($table_fields['modifiedtime'] !== null)   $data['modifiedtime'] = $data['modifiedtime'] != '' ? $data['modifiedtime'] : time();
+        if($table_fields['modifiedtime'] !== null)   $data['modifiedtime'] = $data['modifiedtime'] != '' ? $data['modifiedtime'] : date('Ymdhis', time());
         if($table_fields['modifieduser'] !== null){
             $userdata = System_Auth::get_user_data();
             $data['modifieduser'] = $data['modifieduser'] != '' ? $data['modifieduser'] : $userdata['username'];
@@ -490,7 +490,7 @@ class Alt_Dbo {
         // add modified time and modified user if exist
         $fields = $this->get_fields(false);
         if($fields['isdeleted'] !== null){
-            if($fields['deletedtime'] !== null)    $data['deletedtime'] = $data['deletedtime'] != '' ? $data['deletedtime'] : time();
+            if($fields['deletedtime'] !== null)    $data['deletedtime'] = $data['deletedtime'] != '' ? $data['deletedtime'] : date('Ymdhis', time());
             if($fields['modifieduser'] !== null){
                 $userdata = System_Auth::get_user_data();
                 $data['deleteduser'] = $data['deleteduser'] != '' ? $data['deleteduser'] : $userdata['username'];
