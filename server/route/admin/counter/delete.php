@@ -1,12 +1,10 @@
 <?php defined('ALT_PATH') OR exit('No direct script access allowed');
 
-System_Auth::set_permission(3);
-
 Alt_Validation::instance()
-    ->rule(Alt_Validation::required("queueid"), "Queueid tidak boleh kosong!")
+    ->rule(Alt_Validation::required("counterid"), "Counterid tidak boleh kosong!")
     ->check();
 
-$dbo = new Queue();
+$dbo = new Queue_Counter();
 $data = $dbo->retrieve($_REQUEST);
 
 $userdata = System_Auth::get_user_data();

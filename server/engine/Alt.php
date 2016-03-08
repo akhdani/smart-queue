@@ -135,6 +135,20 @@ class Alt {
         header('Access-Control-Allow-Headers: *');
 
         try{
+            // check routing
+            $routes = explode(DIRECTORY_SEPARATOR, $routing);
+            if($routes[count($routes)-1] == 'pre' || $routes[count($routes)-1] == 'post')
+                throw new Alt_Exception("Request not found", self::STATUS_NOTFOUND);
+
+            // check permission
+            if(isset($config['route']) && isset($config['route'][$routes[0]]))
+                System_Auth::set_permission($config['route'][$routes[0]]);
+
+            // pre file before controller
+            $pre = ALT_PATH . 'route' . DIRECTORY_SEPARATOR . $routes[0] . DIRECTORY_SEPARATOR . 'pre.php';
+            if(is_file($pre))
+                include_once $pre;
+
             // try get file in route folder
             $controller = ALT_PATH . 'route' . DIRECTORY_SEPARATOR . $routing . '.php';
             if(!is_file($controller)) throw new Alt_Exception("Request not found", self::STATUS_NOTFOUND, array('route' => $_SERVER['REQUEST_URI']));
@@ -145,6 +159,14 @@ class Alt {
             $res = ob_get_contents() ? ob_get_contents() : $res;
             ob_end_clean();
 
+            $GLOBALS['response'] = $res;
+
+            // post route
+            $post = ALT_PATH . 'route' . DIRECTORY_SEPARATOR . $routes[0] . DIRECTORY_SEPARATOR . 'post.php';
+            if(is_file($post))
+                include_once $post;
+
+            $res = $GLOBALS['response'] = $res;
             self::response(array(
                 's' => self::STATUS_OK,
                 'd' => $res,

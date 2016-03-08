@@ -12,6 +12,7 @@ class Queue_Counter extends Alt_Dbo {
         $this->table_fields     = array(
             "counterid"         => "",
             "queueid"           => "",
+            "clientid"          => "",
             "name"              => "",
             "description"       => "",
             "entrytime"         => "",

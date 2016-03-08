@@ -19,7 +19,7 @@ if(!function_exists('array_union')){
 }
 
 class Alt_Test extends PHPUnit_Framework_TestCase {
-    public $url = "";
+    public $url = ALT_URL;
     public $route = "";
     public $api;
 

@@ -13,6 +13,7 @@ class Queue_Archive extends Alt_Dbo {
             "numberid"          => "",
             "queueid"           => "",
             "counterid"         => "",
+            "clientid"          => "",
             "number"            => "",
             "date"              => "",
             "ipaddress"         => "",

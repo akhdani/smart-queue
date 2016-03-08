@@ -18,6 +18,8 @@ class Queue extends Alt_Dbo {
             "starttime"         => "",
             "endtime"           => "",
             "avgtime"           => "",
+            "numberid"          => "",
+            "counterid"         => "",
             "isactive"          => "",
             "entrytime"         => "",
             "entryuser"         => "",

@@ -1,11 +1,9 @@
 <?php defined('ALT_PATH') OR exit('No direct script access allowed');
 
-System_Auth::set_permission(1);
-
 Alt_Validation::instance()
-    ->rule(Alt_Validation::required("clientid"), "Clientid tidak boleh kosong!")
+    ->rule(Alt_Validation::required("numberid"), "Numberid tidak boleh kosong!")
     ->check();
 
-$dbo = new Master_Client();
+$dbo = new Queue_Number();
 
 return $dbo->delete($_REQUEST);

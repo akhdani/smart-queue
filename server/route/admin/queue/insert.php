@@ -1,9 +1,7 @@
 <?php defined('ALT_PATH') OR exit('No direct script access allowed');
 
-System_Auth::set_permission(3);
-
 Alt_Validation::instance()
-    ->rule(Alt_Validation::required($_REQUEST["queueid"]), "Queueid tidak boleh kosong!")
+    ->rule(Alt_Validation::required($_REQUEST["clientid"]), "Clientid tidak boleh kosong!")
     ->rule(Alt_Validation::required($_REQUEST["date"]), "Tanggal tidak boleh kosong!")
     ->rule(Alt_Validation::required($_REQUEST["name"]), "Nama tidak boleh kosong!")
     ->rule(Alt_Validation::required($_REQUEST["starttime"]), "Jam awal tidak boleh kosong!")
@@ -12,8 +10,5 @@ Alt_Validation::instance()
     ->check();
 
 $dbo = new Queue();
-
-$userdata = System_Auth::get_user_data();
-$_REQUEST['clientid'] = System_Auth::check(1) ? $_REQUEST['clientid'] : $userdata['clientid'];
 
 return $dbo->insert($_REQUEST);
