@@ -12,7 +12,6 @@ class Queue_Number extends Alt_Dbo {
         $this->table_fields     = array(
             "numberid"          => "",
             "queueid"           => "",
-            "counterid"         => "",
             "clientid"          => "",
             "number"            => "",
             "date"              => "",
@@ -22,6 +21,62 @@ class Queue_Number extends Alt_Dbo {
             "entrytime"         => "",
             "entryuser"         => "",
         );
+    }
+
+    /**
+     * Take queue number
+     * @param $data
+     * @return mixed
+     * @throws Alt_Exception
+     */
+    public function take($data){
+        // get last number
+        $last = $this->get(array(
+            'queueid' => '= ' . $this->quote($data['queueid']),
+            'clientid' => '= ' . $this->quote($data['clientid']),
+            'limit' => 1,
+            'order' => 'number desc',
+        ));
+        $last = count($last) > 0 ? $last[0]['number'] : 1;
+
+        // try to insert
+        $i = 0;
+        $isinserted = false;
+        while(!$isinserted && $i < 10){
+            try{
+                $data['number'] = $last;
+                $this->insert($data);
+                $isinserted = true;
+            }catch(Exception $e){
+                $last++;
+            }
+            $i++;
+        }
+
+        if($i >= 10)
+            throw new Alt_Exception('Tidak dapat mengambil nomor antrian!');
+
+        return $data['number'];
+    }
+
+    /**
+     * Retrieve number with remaining time
+     * @param array $data
+     * @return array
+     * @throws Alt_Exception
+     */
+    public function retrieve($data = array(), $returnsql = false){
+        $number = parent::retrieve($data, $returnsql);
+        if($returnsql)
+            return $number;
+
+        $dboQueue = new Queue();
+        $queue = $dboQueue->retrieve(array('queueid' => $number['queueid']));
+
+        // predict time remaining
+        $number['timeremaining'] = intval($queue['avgtime']) * (intval($number['number']) - intval($queue['number'] + 1));
+
+        return $number;
     }
 
     /**

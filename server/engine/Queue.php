@@ -11,6 +11,7 @@ class Queue extends Alt_Dbo {
         $this->table_name       = "queue";
         $this->table_fields     = array(
             "queueid"           => "",
+            "typeid"            => "",
             "clientid"          => "",
             "date"              => "",
             "name"              => "",
@@ -18,7 +19,7 @@ class Queue extends Alt_Dbo {
             "starttime"         => "",
             "endtime"           => "",
             "avgtime"           => "",
-            "numberid"          => "",
+            "number"            => "",
             "counterid"         => "",
             "isactive"          => "",
             "entrytime"         => "",

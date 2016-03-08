@@ -20,6 +20,7 @@ class System_User extends Alt_Dbo {
             "usergroupid"       => "",
             "isenabled"         => "",
             "clientid"          => "",
+            "counterid"         => "",
         );
 
         $this->view_name            = "view_sys_user";
