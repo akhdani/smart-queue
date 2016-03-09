@@ -4,6 +4,6 @@ Alt_Validation::instance()
     ->rule(Alt_Validation::required($_REQUEST["counterid"]), "Counterid tidak boleh kosong!")
     ->check();
 
-$dbo = new Queue_Counter();
+$dbo = new Queue();
 
-return $dbo->recall($_REQUEST);
+return $dbo->retrieve($_REQUEST);

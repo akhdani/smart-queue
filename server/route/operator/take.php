@@ -6,6 +6,6 @@ Alt_Validation::instance()
     ->rule(Alt_Validation::required($_REQUEST["date"]), "Tanggal tidak boleh kosong!")
     ->check();
 
-$dbo = new Queue_Number();
+$dbo = new Queue();
 
 return $dbo->take($_REQUEST);
