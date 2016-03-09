@@ -368,7 +368,7 @@ class Alt_Dbo {
         $values = array();
         foreach ($data as $field => $value) if(isset($fields[$field])) {
             $fnames[] = $field;
-            $values[] = $this->quote($value);
+            $values[] = $value === null ? 'NULL' : $this->quote($value);
         }
 
         // dynamic columns
@@ -454,7 +454,7 @@ class Alt_Dbo {
         // set fields and values to update
         $fields = array();
         foreach ($data as $field => $value) if(isset($table_fields[$field])) {
-            $fields[] = $field." = ".$this->quote($value);
+            $fields[] = $field." = ". ($value === null ? 'NULL' : $this->quote($value));
         }
 
         // dynamic columns

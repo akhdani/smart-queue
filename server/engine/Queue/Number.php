@@ -39,7 +39,7 @@ class Queue_Number extends Alt_Dbo {
     public function retrieve($data = array(), $returnsql = false){
         // validate
         Alt_Validation::instance()
-            ->rule(Alt_Validation::required($data['queueid']), 'Queueid tidak boleh kosong')
+            ->rule(Alt_Validation::required($data['numberid']), 'Numberid tidak boleh kosong')
             ->check();
 
         // retrieving number
@@ -47,11 +47,29 @@ class Queue_Number extends Alt_Dbo {
         if($returnsql)
             return $number;
 
+        if($number == null)
+            throw new Alt_Exception('Nomor antrian tidak ditemukan!');
+
         $dboQueue = new Queue();
         $queue = $dboQueue->retrieve(array('queueid' => $number['queueid']));
 
         // predict time remaining
-        $number['timeremaining'] = intval($queue['avgtime']) * (intval($number['number']) - intval($queue['number'] + 1));
+        $number['timeremaining'] = intval($number['number']) - intval($queue['number']) > 0 ? intval($queue['avgtime']) * (intval($number['number']) - intval($queue['number'])) : 0;
+
+        // check counter time open and close
+        list($hour, $minute) = explode(":", $queue['starttime']);
+        $timestart = mktime($hour, $minute, 0);
+
+        list($hour, $minute) = explode(":", $queue['endtime']);
+        $timeend = mktime($hour, $minute, 0);
+
+        $timenow = time();
+
+        if($timenow > $timeend)
+            throw new Alt_Exception('Antrian sudah tidak berlaku karena sudah tutup!');
+
+        // calculate time
+        $number['timeremaining'] = ($timestart > $timenow ? $timestart - $timenow : 0) + $number['timeremaining'];
 
         return $number;
     }

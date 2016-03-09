@@ -8,4 +8,6 @@ error_reporting(E_ALL ^ E_NOTICE);
 require ALT_PATH . 'engine' . DIRECTORY_SEPARATOR . 'Alt.php';
 spl_autoload_register(array('Alt', 'autoload'));
 
+date_default_timezone_set('Asia/Jakarta');
+
 Alt::start();

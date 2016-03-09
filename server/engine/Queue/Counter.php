@@ -16,6 +16,7 @@ class Queue_Counter extends Alt_Dbo {
             "name"              => "",
             "description"       => "",
             "numberid"          => "",
+            "number"            => "",
             "entrytime"         => "",
             "entryuser"         => "",
             "modifiedtime"      => "",

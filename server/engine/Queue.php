@@ -13,14 +13,15 @@ class Queue extends Alt_Dbo {
             "queueid"           => "",
             "typeid"            => "",
             "clientid"          => "",
-            "date"              => "",
             "name"              => "",
             "description"       => "",
             "starttime"         => "",
             "endtime"           => "",
             "avgtime"           => "",
+            "numberid"          => "",
             "number"            => "",
             "counterid"         => "",
+            "counter"           => "",
             "isactive"          => "",
             "entrytime"         => "",
             "entryuser"         => "",
@@ -39,15 +40,9 @@ class Queue extends Alt_Dbo {
      * @throws Alt_Exception
      */
     public function next($data){
-        // validate
-        Alt_Validation::instance()
-            ->rule(Alt_Validation::required($data['queueid']), 'Queueid tidak boleh kosong')
-            ->rule(Alt_Validation::required($data['counterid']), 'Counterid tidak boleh kosong')
-            ->rule(Alt_Validation::required($data['numberid']), 'Numberid tidak boleh kosong')
-            ->check();
-
         $dboNumber = new Queue_Number();
         $next = $dboNumber->get(array(
+            'select' => 'numberid, number',
             'queueid' => $data['queueid'],
             'where' => 'numberid > ' . $data['numberid'] . ' and isfinish <> 1 and iscancel = 0',
             'order' => 'number asc',
@@ -57,19 +52,58 @@ class Queue extends Alt_Dbo {
         if(count($next) <= 0)
             throw new Alt_Exception('Nomor antrian sudah habis!');
 
-        $next = $next[0];
+        $data['number'] = $next[0];
 
+        return $this->call($data);
+    }
+
+    public function call($data){
+        // validate
+        Alt_Validation::instance()
+            ->rule(Alt_Validation::required($data['queueid']), 'Queueid tidak boleh kosong')
+            ->rule(Alt_Validation::required($data['counterid']), 'Counterid tidak boleh kosong')
+            ->rule(Alt_Validation::required($data['number']), 'Nomor antrian berikutnya tidak boleh kosong')
+            ->check();
+
+        // get new numberid
+        $dboNumber = new Queue_Number();
+        $next = $dboNumber->get(array(
+            'number' => '= ' . $dboNumber->quote($data['number']),
+            'queueid' => '= ' . $dboNumber->quote($data['queueid']),
+            'isfinish' => 0
+        ));
+
+        if(count($next) <= 0)
+            throw new Alt_Exception('Nomor antrian berikutnya tidak ditemukan atau sudah selesai!');
+
+        // check counter
+        $dboCounter = new Queue_Counter();
+        $counter = $dboCounter->retrieve(array('counterid' => $data['counterid'], 'select' => 'counterid, name'));
+        if($counter == null)
+            throw new Alt_Exception('Loket tidak ditemukan!');
+
+        // update queue
         $dboQueue = new Queue();
         $dboQueue->update(array(
             'queueid' => $data['queueid'],
             'counterid' => $data['counterid'],
+            'counter' => $counter['name'],
+            'numberid' => $next['numberid'],
             'number' => $next['number'],
         ));
 
-        $dboCounter = new Queue_Counter();
+        // update counter
         $dboCounter->update(array(
             'counterid' => $data['counterid'],
             'numberid' => $next['numberid'],
+            'number' => $next['number'],
+        ));
+
+        // update next number
+        $dboNumber->update(array(
+            'numberid' => $next['numberid'],
+            'counterid' => $data['counterid'],
+            'starttime' => time(),
         ));
 
         return $dboQueue->retrieve(array(
@@ -95,9 +129,9 @@ class Queue extends Alt_Dbo {
         $dboNumber = new Queue_Number();
         $number = $dboNumber->retrieve(array('numberid' => $data['numberid']));
 
+        $number['starttime'] = null;
+        $number['endtime'] = null;
         $number['counter'] = 0;
-        $number['starttime'] = "";
-        $number['endtime'] = "";
         $number['isfinish'] = 0;
 
         return $dboNumber->update($number);
@@ -114,12 +148,27 @@ class Queue extends Alt_Dbo {
         Alt_Validation::instance()
             ->rule(Alt_Validation::required($data['queueid']), 'Queueid tidak boleh kosong')
             ->rule(Alt_Validation::required($data['counterid']), 'Counterid tidak boleh kosong')
-            ->rule(Alt_Validation::required($data['numberid']), 'Numberid tidak boleh kosong')
             ->check();
 
-        // update number
+        // check queue
+        $dboQueue = new Queue();
+        $queue = $dboQueue->retrieve(array('queueid' => $data['queueid'], 'isactive' => 1));
+        if($queue == null)
+            throw new Alt_Exception('Antrian tidak ditemukan atau sedang tidak aktif!');
+
+        // if no previous number, return nothing
+        if($queue['number'] == 0)
+            return 0;
+
+        // check counter
+        $dboCounter = new Queue_Counter();
+        $counter = $dboCounter->retrieve(array('counterid' => $data['counterid'], 'select' => 'counterid, name'));
+        if($counter == null)
+            throw new Alt_Exception('Loket tidak ditemukan!');
+
+        // update previous number
         $dboNumber = new Queue_Number();
-        $number = $dboNumber->retrieve(array('numberid' => $data['numberid']));
+        $number = $dboNumber->retrieve(array('numberid' => $queue['numberid']));
 
         if($number['isfinish'] == 1)
             throw new Alt_Exception('Nomor antrian sudah selesai!');
@@ -130,14 +179,10 @@ class Queue extends Alt_Dbo {
         $dboNumber->update($number);
 
         // update queue
-        $dboQueue = new Queue();
-        $queue = $dboQueue->retrieve(array('queueid' => $data['queueid']));
-
         $queue['avgtime'] = ($queue['avgtime'] + abs($number['endtime'] - $number['starttime'])) / 2;
         $dboQueue->update($queue);
 
         // update counter
-        $dboCounter = new Queue_Counter();
         return $dboCounter->update(array(
             'counterid' => $data['counterid'],
             'number' => '0',
@@ -156,6 +201,12 @@ class Queue extends Alt_Dbo {
             ->rule(Alt_Validation::required($data['clientid']), 'Clientid tidak boleh kosong')
             ->rule(Alt_Validation::required($data['queueid']), 'Queueid tidak boleh kosong')
             ->check();
+
+        // check queue
+        $dboQueue = new Queue();
+        $queue = $dboQueue->retrieve(array('queueid' => $data['queueid'], 'isactive' => 1));
+        if($queue == null)
+            throw new Alt_Exception('Antrian tidak ditemukan atau sedang tidak aktif!');
 
         // get last number
         $dboNumber = new Queue_Number();
@@ -223,7 +274,7 @@ class Queue extends Alt_Dbo {
             ->check();
 
         $dboNumber = new Queue_Number();
-        return $dboNumber->retrieve(array('numberid' => $data['numberid']));
+        return $dboNumber->retrieve(array('select' => 'number', 'numberid' => $data['numberid']));
     }
 
     /**
