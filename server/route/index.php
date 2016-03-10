@@ -1,3 +1,3 @@
 <?php defined('ALT_PATH') OR die('No direct access allowed.');
 
-return 'Hello World!';
+return 'Smart Queue is RUNNING!';

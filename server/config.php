@@ -8,12 +8,12 @@ return array (
     'session' => array(
         'lifetime' => 43200,
     ),
-    /*'route' => array(
+    'route' => array(
         'sysadmin' => 1,
         'admin' => 2,
         'operator' => 4,
         'user' => 8,
-    ),*/
+    ),
     /*'security' => array(
         'algorithm' => MCRYPT_RIJNDAEL_128,
         'mode' => MCRYPT_MODE_CBC,

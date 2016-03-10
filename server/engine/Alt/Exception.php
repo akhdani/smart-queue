@@ -6,7 +6,7 @@ class Alt_Exception extends Exception {
     public $message;
 
     public function __construct($message, $code = null, $data = array()) {
-        $data = array_union($data, $_REQUEST, array('userdata' => System_Auth::get_user_data()));
+        $data = array_union($data, $_SERVER, $_REQUEST, array('userdata' => System_Auth::get_user_data()));
         $this->message = $message;
         $this->code = $code ? $code : Alt::STATUS_ERROR;
 

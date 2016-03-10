@@ -1,21 +1,14 @@
 <?php defined('ALT_PATH') OR die('No direct access allowed.');
 
 // php5.2 support
-function array_union($array1, $array2){
-    $array1 = is_array($array1) ? $array1 : array();
-    $array2 = is_array($array2) ? $array2 : array();
-    $union = $array1;
-
-    foreach ($array2 as $key => $value) {
-        if (false === array_key_exists($key, $union)) {
-            $union[$key] = $value;
-        }
-    }
-
+function array_union(){
     $args = func_get_args();
-    if(count($args) > 2) for($i=2; $i<count($args); $i++){
-        $array3 = $args[$i];
-        foreach ($array3 as $key => $value) {
+
+    $array1 = is_array($args[0]) ? $args[0] : array();
+    $union = $array1;
+    if(count($args) > 1) for($i=1; $i<count($args); $i++){
+        $array2 = $args[$i];
+        foreach ($array2 as $key => $value) {
             if (false === array_key_exists($key, $union)) {
                 $union[$key] = $value;
             }
@@ -141,8 +134,8 @@ class Alt {
                 throw new Alt_Exception("Request not found", self::STATUS_NOTFOUND);
 
             // check permission
-            if(isset($config['route']) && isset($config['route'][$routes[0]]))
-                System_Auth::set_permission($config['route'][$routes[0]]);
+            if(isset(self::$config['route']) && isset(self::$config['route'][$routes[0]]))
+                System_Auth::set_permission(self::$config['route'][$routes[0]]);
 
             // pre file before controller
             $pre = ALT_PATH . 'route' . DIRECTORY_SEPARATOR . $routes[0] . DIRECTORY_SEPARATOR . 'pre.php';
@@ -151,7 +144,7 @@ class Alt {
 
             // try get file in route folder
             $controller = ALT_PATH . 'route' . DIRECTORY_SEPARATOR . $routing . '.php';
-            if(!is_file($controller)) throw new Alt_Exception("Request not found", self::STATUS_NOTFOUND, array('route' => $_SERVER['REQUEST_URI']));
+            if(!is_file($controller)) throw new Alt_Exception("Request not found", self::STATUS_NOTFOUND);
 
             ob_start();
             $res = (include_once $controller);
@@ -179,7 +172,7 @@ class Alt {
         }catch(Exception $e){
             self::response(array(
                 's' => self::STATUS_ERROR,
-                'm' => self::$environment == Alt::ENV_DEVELOPMENT ? $e->getCode() . " : " . $e->getMessage() : self::$status[self::STATUS_ERROR],
+                'm' => self::$environment == self::ENV_DEVELOPMENT ? $e->getCode() . " : " . $e->getMessage() : self::$status[self::STATUS_ERROR],
             ));
         }
     }
@@ -222,12 +215,12 @@ class Alt {
                 $output .= '</xml>';
                 break;
             case self::OUTPUT_HTML:
-                $output = $output['s'] == Alt::STATUS_OK ? $output['d'] : $output['m'];
+                $output = $output['s'] == self::STATUS_OK ? $output['d'] : $output['m'];
                 break;
         }
 
-        if(Alt::$environment == Alt::ENV_PRODUCTION && Alt::$config['security'])
-            $output = Alt_Security::encrypt($output, Alt::$config['security']);
+        if(self::$environment == self::ENV_PRODUCTION && self::$config['security'])
+            $output = Alt_Security::encrypt($output, self::$config['security']);
 
         header('Content-length: ' . strlen($output));
         echo $output;

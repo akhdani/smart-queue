@@ -221,10 +221,11 @@ class Queue extends Alt_Dbo {
         // try to insert
         $i = 0;
         $isinserted = false;
+        $insertid = 0;
         while(!$isinserted && $i < 10){
             try{
                 $data['number'] = $last;
-                $dboNumber->insert($data);
+                $insertid = $dboNumber->insert($data);
                 $isinserted = true;
             }catch(Exception $e){
                 $last++;
@@ -235,7 +236,8 @@ class Queue extends Alt_Dbo {
         if($i >= 10)
             throw new Alt_Exception('Tidak dapat mengambil nomor antrian!');
 
-        return $data['number'];
+        $number = $dboNumber->retrieve(array('select' => 'numberid, number', 'numberid' => $insertid));
+        return $number;
     }
 
     /**
