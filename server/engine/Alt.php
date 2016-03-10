@@ -18,6 +18,18 @@ function array_union(){
     return $union;
 }
 
+if (!function_exists('http_response_code')){
+    function http_response_code($newcode = NULL) {
+        static $code = 200;
+        if($newcode !== NULL) {
+            header('X-PHP-Response-Code: '.$newcode, true, $newcode);
+            if(!headers_sent())
+                $code = $newcode;
+        }
+        return $code;
+    }
+}
+
 class Alt {
     // environment
     const ENV_DEVELOPMENT           = 1;
@@ -119,9 +131,6 @@ class Alt {
 
         if(isset(self::$outputs[$ext])) self::$output = $ext;
 
-        // check if response code need to surpress to OK
-        if(!$_REQUEST['issurpress']) header(' ', true, $_REQUEST['s']);
-
         // set response header
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: *');
@@ -190,10 +199,8 @@ class Alt {
     }
 
     public static function response($output = array(), $options = array()){
+        http_response_code($output['s']);
         header('Content-type: ' . self::$outputs[self::$output] . self::$output);
-
-        // flag is only return data, not with status
-        $options['ismini']      = isset($options['ismini']) ? $options['ismini'] : (isset($_REQUEST['ismini']) ? $_REQUEST['ismini'] : self::$environment == self::ENV_PRODUCTION);
 
         // adding benchmark time and memory
         self::$timestop = microtime(true);
@@ -204,11 +211,11 @@ class Alt {
         switch(self::$output){
             case self::OUTPUT_JSON:
             default:
-                $output = $options['ismini'] && $output['s'] == self::STATUS_OK ? $output['d'] : $output;
+                $output = $output['s'] == self::STATUS_OK ? $output['d'] : $output['m'];
                 $output = json_encode($output);
                 break;
             case self::OUTPUT_XML:
-                $text = $options['ismini'] && $output['s'] == self::STATUS_OK ? $output['d'] : $output;
+                $text = $output['s'] == self::STATUS_OK ? $output['d'] : $output['m'];
                 $output  = '<?xml version="1.0" encoding="UTF-8"?>';
                 $output .= '<xml>';
                 $output .= self::xml_encode($text);
