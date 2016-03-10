@@ -109,6 +109,14 @@ class Alt {
                 break;
             default:
                 list($baseurl) = explode('index.php', $_SERVER['PHP_SELF']);
+
+                if(self::$environment == self::ENV_PRODUCTION && self::$config['security']){
+                    parse_str(Alt_Security::decrypt(file_get_contents('php://input'), self::$config['security']), $request);
+                    if(count($request) > 0){
+                        $_REQUEST = $request;
+                        $_POST = $_REQUEST;
+                    }
+                }
                 break;
         }
 
@@ -130,11 +138,6 @@ class Alt {
         $routing = str_replace('/', DIRECTORY_SEPARATOR, $routing);
 
         if(isset(self::$outputs[$ext])) self::$output = $ext;
-
-        // set response header
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Methods: *');
-        header('Access-Control-Allow-Headers: *');
 
         try{
             // check routing
@@ -199,8 +202,12 @@ class Alt {
     }
 
     public static function response($output = array(), $options = array()){
+        // set response header
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: *');
+        header('Access-Control-Allow-Headers: *');
+        header('Content-Type: ' . self::$outputs[self::$output] . self::$output . '; charset=UTF-8');
         http_response_code($output['s']);
-        header('Content-type: ' . self::$outputs[self::$output] . self::$output);
 
         // adding benchmark time and memory
         self::$timestop = microtime(true);
@@ -211,18 +218,18 @@ class Alt {
         switch(self::$output){
             case self::OUTPUT_JSON:
             default:
-                $output = $output['s'] == self::STATUS_OK ? $output['d'] : $output['m'];
+                $output = $output['s'] == self::STATUS_OK && $output['d']? $output['d'] : $output['m'];
                 $output = json_encode($output);
                 break;
             case self::OUTPUT_XML:
-                $text = $output['s'] == self::STATUS_OK ? $output['d'] : $output['m'];
+                $text = $output['s'] == self::STATUS_OK && $output['d']? $output['d'] : $output['m'];
                 $output  = '<?xml version="1.0" encoding="UTF-8"?>';
                 $output .= '<xml>';
                 $output .= self::xml_encode($text);
                 $output .= '</xml>';
                 break;
             case self::OUTPUT_HTML:
-                $output = $output['s'] == self::STATUS_OK ? $output['d'] : $output['m'];
+                $output = $output['s'] == self::STATUS_OK && $output['d'] ? $output['d'] : $output['m'];
                 break;
         }
 
