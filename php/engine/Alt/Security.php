@@ -19,7 +19,7 @@ class Alt_Security {
                     $options['key'],
                     $text,
                     $options['mode'],
-                    $options['iv'] ? $options['iv'] : mcrypt_create_iv(
+                    $options['iv'] ? base64_decode($options['iv']) : mcrypt_create_iv(
                         mcrypt_get_iv_size(
                             $options['algorithm'],
                             $options['mode']
@@ -47,7 +47,7 @@ class Alt_Security {
                 $options['key'],
                 base64_decode($text),
                 $options['mode'],
-                $options['iv'] ? $options['iv'] : mcrypt_create_iv(
+                $options['iv'] ? base64_decode($options['iv']) : mcrypt_create_iv(
                     mcrypt_get_iv_size(
                         $options['algorithm'],
                         $options['mode']

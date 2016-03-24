@@ -193,16 +193,6 @@ class Alt_Dbo {
         if($data['select'] != null && $data['select'] != ''){
             $data['select'] = $this->fieldstring($data['select']);
             $select[] = $data['select'];
-        }else{
-            $select = $this->get_fields();
-            unset($select['entrytime']);
-            unset($select['entryuser']);
-            unset($select['modifiedtime']);
-            unset($select['modifieduser']);
-            unset($select['deletedtime']);
-            unset($select['deleteduser']);
-            unset($select['isdeleted']);
-            $select = array_keys($select);
         }
 
         return count($select) > 0 ? implode(", ", $select) : "*";
@@ -357,7 +347,7 @@ class Alt_Dbo {
 
         // add entry time and entry user if exist
 
-        if($fields['entrytime'] !== null)   $data['entrytime'] = $data['entrytime'] != '' ? $data['entrytime'] : date('YmdHis', time());
+        if($fields['entrytime'] !== null)   $data['entrytime'] = $data['entrytime'] != '' ? $data['entrytime'] : time();
         if($fields['entryuser'] !== null){
             $userdata = System_Auth::get_user_data();
             $data['entryuser'] = $data['entryuser'] != '' ? $data['entryuser'] : $userdata['username'];
@@ -368,7 +358,7 @@ class Alt_Dbo {
         $values = array();
         foreach ($data as $field => $value) if(isset($fields[$field])) {
             $fnames[] = $field;
-            $values[] = $value === null ? 'NULL' : $this->quote($value);
+            $values[] = $this->quote($value);
         }
 
         // dynamic columns
@@ -445,7 +435,7 @@ class Alt_Dbo {
         $table_fields = $this->get_fields(false);
 
         // add modified time and modified user if exist
-        if($table_fields['modifiedtime'] !== null)   $data['modifiedtime'] = $data['modifiedtime'] != '' ? $data['modifiedtime'] : date('YmdHis', time());
+        if($table_fields['modifiedtime'] !== null)   $data['modifiedtime'] = $data['modifiedtime'] != '' ? $data['modifiedtime'] : time();
         if($table_fields['modifieduser'] !== null){
             $userdata = System_Auth::get_user_data();
             $data['modifieduser'] = $data['modifieduser'] != '' ? $data['modifieduser'] : $userdata['username'];
@@ -454,7 +444,7 @@ class Alt_Dbo {
         // set fields and values to update
         $fields = array();
         foreach ($data as $field => $value) if(isset($table_fields[$field])) {
-            $fields[] = $field." = ". ($value === null ? 'NULL' : $this->quote($value));
+            $fields[] = $field." = ".$this->quote($value);
         }
 
         // dynamic columns
@@ -500,7 +490,7 @@ class Alt_Dbo {
         // add modified time and modified user if exist
         $fields = $this->get_fields(false);
         if($fields['isdeleted'] !== null){
-            if($fields['deletedtime'] !== null)    $data['deletedtime'] = $data['deletedtime'] != '' ? $data['deletedtime'] : date('YmdHis', time());
+            if($fields['deletedtime'] !== null)    $data['deletedtime'] = $data['deletedtime'] != '' ? $data['deletedtime'] : time();
             if($fields['modifieduser'] !== null){
                 $userdata = System_Auth::get_user_data();
                 $data['deleteduser'] = $data['deleteduser'] != '' ? $data['deleteduser'] : $userdata['username'];

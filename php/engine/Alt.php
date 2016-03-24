@@ -30,6 +30,45 @@ if (!function_exists('http_response_code')){
     }
 }
 
+if (!function_exists('getallheaders')) {
+    /**
+     * Get all HTTP header key/values as an associative array for the current request.
+     *
+     * @return string[string] The HTTP header key/value pairs.
+     */
+    function getallheaders()
+    {
+        $headers = array();
+        $copy_server = array(
+            'CONTENT_TYPE'   => 'Content-Type',
+            'CONTENT_LENGTH' => 'Content-Length',
+            'CONTENT_MD5'    => 'Content-Md5',
+        );
+        foreach ($_SERVER as $key => $value) {
+            if (substr($key, 0, 5) === 'HTTP_') {
+                $key = substr($key, 5);
+                if (!isset($copy_server[$key]) || !isset($_SERVER[$key])) {
+                    $key = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', $key))));
+                    $headers[$key] = $value;
+                }
+            } elseif (isset($copy_server[$key])) {
+                $headers[$copy_server[$key]] = $value;
+            }
+        }
+        if (!isset($headers['Authorization'])) {
+            if (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+                $headers['Authorization'] = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+            } elseif (isset($_SERVER['PHP_AUTH_USER'])) {
+                $basic_pass = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
+                $headers['Authorization'] = 'Basic ' . base64_encode($_SERVER['PHP_AUTH_USER'] . ':' . $basic_pass);
+            } elseif (isset($_SERVER['PHP_AUTH_DIGEST'])) {
+                $headers['Authorization'] = $_SERVER['PHP_AUTH_DIGEST'];
+            }
+        }
+        return $headers;
+    }
+}
+
 class Alt {
     // environment
     const ENV_DEVELOPMENT           = 1;
@@ -57,7 +96,7 @@ class Alt {
         self::STATUS_OK             => 'OK',
         self::STATUS_UNAUTHORIZED   => 'UNAUTHORIZED',
         self::STATUS_FORBIDDEN      => 'FORBIDDEN',
-        self::STATUS_NOTFOUND       => 'NOTFOUND',
+        self::STATUS_NOTFOUND       => 'NOT FOUND',
         self::STATUS_ERROR          => 'ERROR',
     );
 
@@ -68,25 +107,24 @@ class Alt {
 
     /**
      * Start Alt application
-     * @param array $options
      */
-    public static function start($options = array()){
+    public static function start(){
         session_start();
 
         // set timestart
         self::$timestart = $_SERVER['REQUEST_TIME_FLOAT'];
 
         // read config
-        self::$config = $options['config'] ? $options['config'] : (include_once ALT_PATH . 'config.php');
+        self::$config = include_once ALT_PATH . 'config.php';
 
         // set environment
-        self::$environment = $options['environment'] ? $options['environment'] : (self::$config['app']['environment'] ? (strtolower(self::$config['app']['environment']) == 'development' ? self::ENV_DEVELOPMENT : self::ENV_PRODUCTION) : self::$environment);
+        self::$environment = self::$config['app']['environment'] ? (strtolower(self::$config['app']['environment']) == 'development' ? self::ENV_DEVELOPMENT : self::ENV_PRODUCTION) : self::$environment;
 
         // set log level
-        Alt_Log::$level = $options['loglevel'] ? $options['loglevel'] : (self::$config['app']['loglevel'] ? self::$config['app']['loglevel'] : (self::$environment == self::ENV_PRODUCTION ? Alt_Log::LEVEL_ERROR : Alt_Log::LEVEL_LOG));
+        Alt_Log::$level = self::$config['app']['loglevel'] ? self::$config['app']['loglevel'] : (self::$environment == self::ENV_PRODUCTION ? Alt_Log::LEVEL_ERROR : Alt_Log::LEVEL_LOG);
 
         // set default output
-        self::$output = $options['output'] ? $options['output'] : (self::$config['app']['output'] ? self::$config['app']['output'] : self::$output);
+        self::$output = self::$config['app']['output'] ? self::$config['app']['output'] : self::$output;
 
         // can be used as a web app or command line
         switch(PHP_SAPI){
@@ -110,13 +148,16 @@ class Alt {
             default:
                 list($baseurl) = explode('index.php', $_SERVER['PHP_SELF']);
 
-                if(self::$environment == self::ENV_PRODUCTION && self::$config['security']){
-                    parse_str(Alt_Security::decrypt(file_get_contents('php://input'), self::$config['security']), $request);
+                if(self::$environment == self::ENV_PRODUCTION && self::$config['security'] && file_get_contents('php://input') != ""){
+                    $encrypted = Alt_Security::decrypt(file_get_contents('php://input'), self::$config['security']);
+                    $request = array();
+                    parse_str($encrypted, $request);
                     if(count($request) > 0){
-                        $_REQUEST = $request;
+                        $_REQUEST = array_union($request, $_REQUEST);
                         $_POST = $_REQUEST;
                     }
                 }
+
                 break;
         }
 
@@ -206,8 +247,9 @@ class Alt {
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: *');
         header('Access-Control-Allow-Headers: *');
-        header('Content-Type: ' . self::$outputs[self::$output] . self::$output . '; charset=UTF-8');
+//        header('Content-Type: ' . self::$outputs[self::$output] . self::$output . '; charset=UTF-8');
         http_response_code($output['s']);
+//        http_response_code(200);
 
         // adding benchmark time and memory
         self::$timestop = microtime(true);

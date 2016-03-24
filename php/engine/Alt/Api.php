@@ -41,11 +41,11 @@ class Alt_Api {
     }
 
     public function set_header($header = array()){
-        return array_union(array('Authorization' => 'Token token="' . System_Auth::get_token() . '"'), $header, $this->header);
+        return array_union($header, $this->header);
     }
 
     public function set_body($data = array()){
-        $data = array_union($data, $this->data, array('token' => System_Auth::get_token()));
+        $data = array_union($data, $this->data);
 
         $body = "";
         if(function_exists("http_build_query")){
