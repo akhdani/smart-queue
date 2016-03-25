@@ -15,6 +15,10 @@ public class AltDbRow extends HashMap<String, Object>{
         return raw;
     }
 
+    public String get(String key){
+        return this.getString(key);
+    }
+
     public String getString(String key){
         String res = String.valueOf(super.get(key));
         return res.equals("null") ? "" : res;
