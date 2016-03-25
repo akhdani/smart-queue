@@ -19,8 +19,14 @@ class Queue_Archive extends Alt_Dbo {
             "ipaddress"         => "",
             "useragent"         => "",
             "session"           => "",
+            "starttime"         => "",
+            "endtime"           => "",
+            "isfinish"          => "",
             "entrytime"         => "",
             "entryuser"         => "",
+            "iscancel"          => "",
+            "canceltime"        => "",
+            "canceluser"        => "",
         );
     }
 }
