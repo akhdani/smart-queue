@@ -1,60 +1,32 @@
-<form data-ng-submit="login()" style="padding-top: 20px;">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col s12 center-align">
-                <img src="asset/img/logo_with_text2.png" style="width: 110px;"/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col s12">
-                <input id="email" type="text" data-ng-model="data.username" placeholder="Email / ID Pel / Nomor Meter*">
-            </div>
-            <div class="col s10">
-                <input id="password" type="{{ passtype }}" data-ng-model="data.password" placeholder="Kata Sandi*">
-            </div>
-            <div class="col s2" data-ng-init="passtype = 'password';" style="padding-top: 5px;">
-                <a class="btn-floating z-depth-0">
-                    <i data-ng-show="passtype == 'password';" data-ng-click="passtype = 'text';" class="fa fa-2x fa-eye-slash"></i>
-                    <i data-ng-show="passtype == 'text';" data-ng-click="passtype = 'password';" class="fa fa-2x fa-eye"></i>
-                </a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col s12" data-ng-show="isloading">
-                <div class="progress">
-                    <div class="indeterminate"></div>
-                </div>
-            </div>
-            <div class="col s6">
-                <button class="btn btn-large yellow darken-1 waves-light col s12 z-depth-1" type="button" name="action" data-ng-click="redirect('auth/register')">
-                    Daftar
-                </button>
-            </div>
-            <div class="col s6">
-                <button class="btn btn-large green accent-3 waves-light col s12 z-depth-1" type="submit" name="action">
-                    Masuk
-                </button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col s12">
-                <button class="btn btn-flat col s12 z-depth-1" type="button" style="color:#00acc1" data-ng-click="redirect('auth/forgetpassword')">
-                    Lupa Password ?
-                </button>
-            </div>
-            <div class="col s12">
-                <button class="btn btn-flat col s12 z-depth-1" type="button" style="color:#00acc1" data-ng-click="redirect('auth/activation?tipe=aktivasi')">
-                    Aktivasi Akun
-                </button>
-            </div>
-        </div>
+<div id="content" class="grey-blue login">
+    <!-- Toolbar -->
+    <div id="toolbar" class="tool-login primary-color animated fadeindown">
+        <a data-ng-click="back()" class="open-left">
+            <i class="ion-android-arrow-back"></i>
+        </a>
     </div>
-</form>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col s12 center-align">
-            {{ alt.client }} <br/>
-            {{ alt.title }}
-        </div>
+
+
+    <!-- Main Content -->
+    <div class="login-form animated fadeinup delay-2 z-depth-1">
+
+        <h1 data-ng-bind="alt.title"></h1>
+        <p>Start using <span data-ng-bind="alt.title"></span> using your social media account!</p>
+        <br/>
+        <br/>
+
+        <a class="waves-effect waves-light btn-large red width-100 m-b-20 animated bouncein delay-4">
+            <i class="ion-social-googleplus"></i>
+            Google
+        </a>
+        <a class="waves-effect waves-light btn-large blue width-100 m-b-20 animated bouncein delay-4">
+            <i class="ion-social-facebook"></i>
+            Facebook
+        </a>
+        <a class="waves-effect waves-light btn-large teal lighten-2 width-100 m-b-20 animated bouncein delay-4">
+            <i class="ion-social-twitter"></i>
+            Twitter
+        </a>
     </div>
+    <!-- End of Main Contents -->
 </div>

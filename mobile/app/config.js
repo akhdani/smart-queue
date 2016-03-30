@@ -1,17 +1,27 @@
+// application specific
 alt.appid = 'smartqueue';
 alt.application = 'smartqueue';
 alt.title = 'Smart Queue';
 alt.description = '';
 alt.version = '1.0.0';
 
+// environment
 alt.environment = 'production';
 alt.serverUrl = 'http://localhost/smart-queue/php/';
 alt.urlArgs = alt.environment == 'production' ? '_v=' + alt.version : '_t=' + (+new Date());
 alt.timeout = 30000;
-alt.defaultRoute = 'halo/home/drawer';
+alt.defaultRoute = 'home';
 alt.secure = {
     key: 'u/Gu5posvwDsXUnV5Zaq4g==',
     iv: '5D9r9ZVzEYYgha93/aUK2w=='
+};
+
+// oauth
+alt.oauth = {
+    google: {
+        clientid: '27235824443-m1hqk0vci2nprf1no9g7jt2nj09ro14d.apps.googleusercontent.com',
+        secret: 'mjhLmZZxi0qaTCRvm84W0gHp'
+    }
 };
 
 // advanced configuration

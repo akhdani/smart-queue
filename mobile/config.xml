@@ -49,4 +49,6 @@
   <allow-navigation href="https://*/*"/>
   <allow-intent href="http://*/*"/>
   <allow-intent href="https://*/*"/>
+
+  <hook type="before_build" src="hooks/before_build/010_gulp_task.js" />
 </widget>
