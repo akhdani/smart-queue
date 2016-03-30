@@ -1,0 +1,326 @@
+<div class="navbar-fixed noselect main-menu" style="position:fixed;">
+    <nav role="navigation">
+        <div class="nav-wrapper container-fluid">
+            <a id="logo-container" class="brand-logo">
+                <marquee><strong>mobEl</strong></marquee>
+            </a>
+
+            <div id="nav-mobile" class="side-nav">
+                <div id="userdata" class="row">
+                    <div class="col s12">
+                        <p style="padding-right: 15px; width: 90%; color: #69717D">
+                            <marquee>{{ username }}</marquee>
+                        </p>
+                    </div>
+                </div>
+                <ul class='menu left'>
+                    <li>
+                        <a class="" href="" data-ng-click="redirect('home')">
+                            <div class="icon red valign-wrapper">
+                                <i class="fa fa-4x fa-home"></i>
+                            </div>
+                            <div class="label">Home</div>
+                        </a>
+                    </li>
+                    <li data-ng-if="menu.profil == 1">
+                        <a class="" href="" data-ng-click="redirect('profil')">
+                            <div class="icon pink">
+                                <i class="fa fa-user"></i>
+                            </div>
+                            <div class="label">Profil</div>
+                        </a>
+                    </li>
+                    <li data-ng-if="menu.informasi == 1">
+                        <a class="" data-ng-click="redirect('informasi')">
+                            <div class="icon amber">
+                                <i class="fa fa-book"></i>
+                            </div>
+                            <div class="label">Informasi</div>
+                        </a>
+                    </li>
+                    <li data-ng-if="menu.permohonan == 1">
+                        <a class="" data-ng-click="redirect('permohonan')">
+                            <div class="icon green">
+                                <i class="fa fa-pencil-square-o"></i>
+                            </div>
+                            <div class="label">Permohonan</div>
+                        </a>
+                    </li>
+                    <li data-ng-if="menu.pengaduan == 1">
+                        <a class="" data-ng-click="redirect('keluhan')">
+                            <div class="icon blue">
+                                <i class="fa fa-commenting"></i>
+                            </div>
+                            <div class="label">Pengaduan</div>
+                        </a>
+                    </li>
+                    <li data-ng-if="menu.feedback == 1">
+                        <a class="" data-ng-click="redirect('feedback')">
+                            <div class="icon red">
+                                <i class="fa fa-feed"></i>
+                            </div>
+                            <div class="label">Feedback</div>
+                        </a>
+                    </li>
+                    <li data-ng-if="alt.version != 'v2' && menu.interaktif == 1 && isprabayar">
+                        <a class="" data-ng-click="redirect('interaktif/meterpra')">
+                            <div class="icon lime">
+                                <i class="fa fa-hand-pointer-o"></i>
+                            </div>
+                            <div class="label">Prabayar 2 Arah</div>
+                        </a>
+                    </li>
+                    <li data-ng-if="alt.version != 'v2' && menu.standmandiri == 1 && !isprabayar">
+                        <a class="" data-ng-click="redirect('standmandiri')">
+                            <div class="icon indigo">
+                                <i class="fa fa-tachometer"></i>
+                            </div>
+                            <div class="label">Stand Mandiri</div>
+                        </a>
+                    </li>
+                    <li data-ng-if="menu.call == 1">
+                        <a class="" data-ng-click="redirect('callpln123')">
+                            <div class="icon purple">
+                                <i class="fa fa-phone-square"></i>
+                            </div>
+                            <div class="label">Call PLN 123</div>
+                        </a>
+                    </li>
+                    <li data-ng-if="menu.lokasi == 1">
+                        <a class="" data-ng-click="redirect('lokasi')">
+                            <div class="icon cyan">
+                                <i class="fa fa-map"></i>
+                            </div>
+                            <div class="label">Lokasi Pembayaran</div>
+                        </a>
+                    </li>
+                    <li data-ng-if="menu.tdl == 1">
+                        <a class="" data-ng-click="redirect('tariflistrik')">
+                            <div class="icon teal">
+                                <i class="fa fa-flash"></i>
+                            </div>
+                            <div class="label">Tarif Listrik Berlaku</div>
+                        </a>
+                    </li>
+                    <li data-ng-if="alt.version != 'v2' && menu.smarthome == 1">
+                        <a class="" data-ng-click="redirect('smarthome')">
+                            <div class="icon indigo">
+                                <i class="fa fa-feed"></i>
+                            </div>
+                            <div class="label">Smart Home</div>
+                        </a>
+                    </li>
+                    <li data-ng-if="menu.kbase == 1">
+                        <a class="" data-ng-click="redirect('knowledgebase')">
+                            <div class="icon lime">
+                                <i class="fa fa-tasks"></i>
+                            </div>
+                            <div class="label">Knowledge Base</div>
+                        </a>
+                    </li>
+                    <li data-ng-if="alt.version != 'v2' && menu.setting == 1">
+                        <a class="" data-ng-click="redirect('setting')">
+                            <div class="icon amber">
+                                <i class="fa fa-gear"></i>
+                            </div>
+                            <div class="label">Setting</div>
+                        </a>
+                    </li>
+                    <li data-ng-if="menu.tentang == 1">
+                        <a class="" data-ng-click="redirect('tentang')">
+                            <div class="icon brown">
+                                <i class="fa fa-info-circle"></i>
+                            </div>
+                            <div class="label">Tentang Aplikasi</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="" data-ng-click="redirect('auth/logout')">
+                            <div class="icon red">
+                                <i class="fa fa-power-off"></i>
+                            </div>
+                            <div class="label">Logout</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <a data-activates="nav-mobile" class="btn-floating z-depth-0" id="btn_left_nav"><i class="fa fa-reorder"></i></a>
+
+            <div id="filter" class="side-nav">
+                <ul class='menu right'>
+                    <!--<li>
+                        <a class="" data-ng-click="filter.type = ''">
+                            <div class="label">Latest</div>
+                            <div class="icon" style="background-color: #40E0D0">
+                                <i class="fa fa-home"></i>
+                            </div>
+                        </a>
+                    </li>-->
+                    <li>
+                        <a class="" data-ng-click="filter.type = ''">
+                            <div class="label">Semua</div>
+                            <div class="icon" style="background-color: #778899">
+                                <i class="fa fa-th-large"></i>
+                            </div>
+                        </a>
+                    </li>
+                    <!--<li>
+                        <a class="" data-ng-click="filter.type = 'tagihan'">
+                            <div class="label">Tagihan</div>
+                            <div class="icon" style="background-color: #BDB76B">
+                                <i class="fa fa-check-square-o"></i>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="" data-ng-click="filter.type = 'keluhan'">
+                            <div class="label">Gangguan</div>
+                            <div class="icon" style="background-color: #20B2AA">
+                                <i class="fa fa-commenting"></i>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="" data-ng-click="filter.type = 'niaga'">
+                            <div class="label">Niaga</div>
+                            <div class="icon" style="background-color: #90EE90">
+                                <i class="fa fa-line-chart"></i>
+                            </div>
+                        </a>
+                    </li>-->
+                    <li>
+                        <a class="" data-ng-click="filter.type = 'berita'">
+                            <div class="label">Berita</div>
+                            <div class="icon" style="background-color: #B22222">
+                                <i class="fa fa-newspaper-o"></i>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="" data-ng-click="filter.type = 'push'">
+                            <div class="label">Notifikasi</div>
+                            <div class="icon" style="background-color: #90EE90">
+                                <i class="fa fa-asterisk"></i>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <a data-activates="filter" class="btn-floating z-depth-0" id="btn_right_nav"><i class="fa fa-bell-o"></i></a>
+        </div>
+    </nav>
+</div>
+
+<div class="progress fixed" data-ng-show="isloading">
+    <div class="indeterminate"></div>
+</div>
+
+<div class="container-fluid">
+    <div class="row" style="padding-top: 60px">
+        <div class="col s12 m12 noselect" data-ng-repeat="card in timeline | filter:filter">
+            <!--<div class="card-panel white-text {{ card.class }}" data-ng-if="card.type == 'panel'">
+                <h5>{{ card.title }}</h5>
+                <div>
+                    <i class="left fa fa-4x {{ card.icon }}"></i>
+                    <h5>{{ card.subtitle }}</h5>
+                </div>
+                <p>
+                    {{ card.content }}
+                </p>
+                <div class="right-align card-action" style="margin-top: 20px;">
+                    &lt;!&ndash;<a style="margin-right: 10px;" data-ng-href=""><i style="color: white;" class="fa fa-google-plus-square fa-2x"></i></a>
+                    <a style="margin-right: 10px;" data-ng-href=""><i style="color: white;" class="fa fa-twitter-square fa-2x"></i></a>
+                    <a style="margin-right: 10px;" data-ng-href=""><i style="color: white;" class="fa fa-facebook-square fa-2x"></i></a>&ndash;&gt;
+                </div>
+            </div>
+
+            <div class="card" data-ng-if="card.type == 'tagihan'">
+                <div class="card-content">
+                    <h5>
+                        Tagihan Bulan <span style="color: red;">{{ card.month }}</span>
+                    </h5>
+                    <p>{{ card.short }}</p>
+                    <span class="right" style="padding: 5px 10px 5px 10px; background-color: #f4f4f4; margin-right: -20px;">
+                        {{ card.status }}
+                    </span>
+                    <h4 style="color: red;">{{ card.amount }}</h4>
+                </div>
+                <div class="card-action">
+                    {{ card.subtype }}
+                    <span class="right">
+                        &lt;!&ndash;<a data-ng-href=""><i class="fa fa-google-plus-square fa-2x"></i></a>
+                        <a data-ng-href=""><i class="fa fa-twitter-square fa-2x"></i></a>
+                        <a data-ng-href=""><i class="fa fa-facebook-square fa-2x"></i></a>&ndash;&gt;
+                    </span>
+                </div>
+            </div>
+
+            <div class="card" data-ng-if="card.type == 'faq'" data-ng-click="modal.open(card)">
+                <div class="card-content">
+                    <h5>
+                        {{ card.title }}
+                        <i class="fa fa-info-circle right"></i>
+                    </h5>
+                    <p>{{ card.short }}</p>
+                </div>
+                <div class="card-action">
+                    {{ card.subtype }}
+                    <span class="right">
+                        &lt;!&ndash;<a data-ng-href=""><i class="fa fa-google-plus-square fa-2x"></i></a>
+                        <a data-ng-href=""><i class="fa fa-twitter-square fa-2x"></i></a>
+                        <a data-ng-href=""><i class="fa fa-facebook-square fa-2x"></i></a>&ndash;&gt;
+                    </span>
+                </div>
+            </div>-->
+
+            <div class="card" data-ng-if="card.type == 'push'">
+                <div class="card-image" data-ng-click="modal.open(card)">
+                    <img data-ng-src="asset/img/{{ card.image || 'pln_pic1.jpg' }}" height="200" style="height: 200px;">
+                    <span class="card-title">{{ card.title }}</span>
+                </div>
+                <div class="card-content" data-ng-click="modal.open(card)">
+                    <p>{{ card.short }}</p>
+                </div>
+                <div class="card-action">
+                    {{ card.subtype }}
+                    <span class="center-align" style="vertical-align: middle">
+                        <a class="waves-effect waves-teal btn-flat" style="color: #f44336" data-ng-click="deleteLocalNotif(card.id)"><i class="fa fa-trash"></i></a>
+                        <!--<a data-ng-href=""><i class="fa fa-google-plus-square fa-2x"></i></a>
+                        <a data-ng-href=""><i class="fa fa-twitter-square fa-2x"></i></a>
+                        <a data-ng-href=""><i class="fa fa-facebook-square fa-2x"></i></a>-->
+                    </span>
+                </div>
+            </div>
+
+            <div class="card" data-ng-if="card.type == 'berita'" data-ng-click="modal.open(card)">
+                <div class="card-image">
+                    <img data-ng-src="asset/img/{{ card.image || 'pln_pic1.jpg' }}" height="200" style="height: 200px;">
+                    <span class="card-title">{{ card.title }}</span>
+                </div>
+                <div class="card-content">
+                    <p>{{ card.short }}</p>
+                </div>
+                <div class="card-action">
+                    {{ card.subtype }}
+                    <span class="right">
+                        <!--<a data-ng-href=""><i class="fa fa-google-plus-square fa-2x"></i></a>
+                        <a data-ng-href=""><i class="fa fa-twitter-square fa-2x"></i></a>
+                        <a data-ng-href=""><i class="fa fa-facebook-square fa-2x"></i></a>-->
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Structure -->
+<div id="modal" class="modal modal-fixed-footer">
+    <div class="modal-content">
+        <h4>{{ modal.title }}</h4>
+        <p id="modal_content">{{ modal.content }}</p>
+        <a data-ng-href="{{ modal.link }}" target="_blank">{{ modal.link }}</a>
+    </div>
+    <div class="modal-footer">
+        <a href="" class="modal-action modal-close waves-green btn-flat">Kembali</a>
+    </div>
+</div>

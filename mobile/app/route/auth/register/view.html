@@ -1,0 +1,104 @@
+<style type="text/css">
+    #modal-maps{
+        min-height: 80%;
+        min-width: 90%;
+        margin: auto;
+    }
+
+    #modal-maps .modal-content{
+        padding: 0;
+    }
+
+    #map .centerMarker{
+        position:absolute;
+        /*url of the marker*/
+        background:url(http://maps.gstatic.com/mapfiles/markers2/marker.png) no-repeat;
+        /*center the marker*/
+        top:50%;left:50%;
+        z-index:1;
+        /*fix offset when needed*/
+        margin-left:-10px;
+        margin-top:-34px;
+        /*size of the image*/
+        height:34px;
+        width:20px;
+        cursor:pointer;
+    }
+</style>
+<div class="navbar-fixed noselect" style="position:fixed;">
+    <nav>
+        <div class="nav-wrapper container-fluid">
+            <a id="logo-container" class="brand-logo">
+                <marquee>Daftar</marquee>
+            </a>
+            <a class="btn-floating z-depth-0" id="btn_left_nav" data-ng-click="back()"><i class="fa fa-arrow-left"></i></a>
+        </div>
+    </nav>
+</div>
+
+<div class="progress fixed" data-ng-show="isloading">
+    <div class="indeterminate"></div>
+</div>
+
+<div class="container-fluid">
+    <form data-ng-submit="submit()">
+        <div class="row">
+            <!--<div class="col s12 center-align">
+                <img src="asset/img/ic_add_pp.png" style="width: 100px;"/>
+            </div>-->
+            <div class="col s12">
+                <input id="name" type="text" data-ng-model="data.name" maxlength="25" placeholder="Nama Pelanggan*"/>
+            </div>
+            <div class="col s10">
+                <input id="address" type="text" data-ng-model="data.address" maxlength="100" placeholder="Alamat Pelanggan*"/>
+            </div>
+            <div class="col s1">
+                <button type="button" class="btn-floating z-depth-0" data-ng-click="openMap()">
+                    <i class="fa fa-2x fa-crosshairs"></i>
+                </button>
+            </div>
+            <div class="col s12">
+                <input id="telp" type="tel" data-ng-model="data.telp" maxlength="15" placeholder="Nomor Telepon Pelanggan*"/>
+            </div>
+            <div class="col s12">
+                <input id="idpel" type="tel" data-ng-model="data.idpel" maxlength="12" placeholder="Id Pelanggan / Nomor Meter (Prabayar)"/>
+            </div>
+            <!--<div class="col s12">
+                <input id="no_meter" type="tel" data-ng-model="data.no_meter" maxlength="11" placeholder="Nomor Meter (Prabayar)">
+            </div>-->
+            <div class="col s12">
+                <input id="nomor_referensi" type="text" data-ng-model="data.nomor_referensi" maxlength="6" placeholder="Kode Referensi Pembayaran (6 Digit Terakhir)*"/>
+            </div>
+            <div class="col s12">
+                <input id="email" type="email" data-ng-model="data.email" maxlength="255" placeholder="Email*"/>
+            </div>
+            <div class="col s12">
+                <input id="password" type="password" data-ng-model="data.password" maxlength="255" placeholder="Kata Sandi*">
+            </div>
+            <div class="col s12">
+                <input id="password2" type="password" data-ng-model="data.password2" maxlength="255" placeholder="Ketik Ulang Kata Sandi*">
+            </div>
+            <div class="col s12">
+                <button id="btn_login" class="btn btn-large green accent-3 waves-light col s12 z-depth-1" type="button" name="action" data-ng-click="submit()">
+                    Daftar
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+<div id="modal-maps" class="modal modal-fixed-footer">
+    <div class="modal-content">
+        <div class="row-fluid">
+            <div class="col s12">
+                <div id="map" style="min-width: 100%; min-height: 100%;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button data-ng-click="setLocation()" style="background-color: #00acc1" class="modal-action modal-close waves-effect waves-green btn">Pilih Lokasi</button>
+        <button data-ng-click="closeMap()" style="background-color: #e53935; margin-right: 10px" class="modal-action modal-close waves-effect waves-green btn">Batal</button>
+    </div>
+</div>

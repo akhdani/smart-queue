@@ -1,0 +1,38 @@
+<div class="navbar-fixed noselect" style="position:fixed;">
+    <nav>
+        <div class="nav-wrapper container-fluid">
+            <a id="logo-container" class="brand-logo">
+                <marquee>{{data.tipe == 'aktivasi' ? 'Aktivasi Akun' : 'Reset Password'}}</marquee>
+            </a>
+            <a class="btn-floating z-depth-0" id="btn_left_nav" data-ng-click="back()"><i class="fa fa-arrow-left"></i></a>
+        </div>
+    </nav>
+</div>
+
+<div class="progress fixed" data-ng-show="isloading">
+    <div class="indeterminate"></div>
+</div>
+
+<div class="container-fluid">
+    <form data-ng-submit="submit()">
+        <div class="row">
+            <div class="col s12" data-ng-if="data.tipe == 'reset'">
+                <input id="username" type="text" data-ng-model="data.username" placeholder="Email / ID Pel / Nomor Meter*">
+            </div>
+            <div class="col s12" data-ng-if="data.tipe == 'reset'">
+                <input id="password" type="password" data-ng-model="data.password" maxlength="255" placeholder="Kata Sandi{{data.tipe == 'aktivasi' ? '' : ' Baru'}}*">
+            </div>
+            <div class="col s12" data-ng-if="data.tipe == 'reset'">
+                <input id="password2" type="password" data-ng-model="data.password2" maxlength="255" placeholder="Ketik Ulang Kata Sandi*">
+            </div>
+            <div class="col s12">
+                <input id="kode" type="tel" data-ng-model="data.kode" maxlength="6" placeholder="Kode {{data.tipe == 'reset' ? 'Reset Password' : 'Aktivasi'}}*">
+            </div>
+            <div class="col s12">
+                <button id="btn_login" class="btn btn-large green accent-3 waves-light col s12 z-depth-1" type="button" name="action" data-ng-click="submit()">
+                    {{data.tipe == 'reset' ? 'Reset Password' : 'Aktivasi'}}
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

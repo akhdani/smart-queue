@@ -1,0 +1,11 @@
+{
+  "name": "smart-queue",
+  "app_id": "",
+  "documentRoot": "app/",
+  "watchPatterns": [
+    "app/**/*.js",
+    "app/**/*.css",
+    "app/**/*.html",
+    "!app/asset/lib/**/*"
+  ]
+}
